@@ -8,11 +8,9 @@ from PyQt5 import uic
 from PyQt5.QtGui import QIcon
 import datetime
 import os
-from license_key import *
 import traceback
 from threading import Thread
 import hashlib
-from Crypto.Cipher import AES
 import base64
 #pip install colored tk python-dateutil requests pyyaml
 
@@ -299,34 +297,12 @@ class MainLevelInputDialog(QDialog):
 
 
 
-class AESCipher(object):
-    def __init__(self, key):
-        self.key = hashlib.sha256(key.encode()).digest()
-    
-    def encrypt(self, message):
-        message = message.encode()
-        raw = pad(message)
-        cipher = AES.new(self.key, AES.MODE_CBC, self.__iv().encode('utf8'))
-        enc = cipher.encrypt(raw)
-        return base64.b64encode(enc).decode('utf-8')
-    
-    def decrypt(self, enc):
-        enc = base64.b64decode(enc)
-        cipher = AES.new(self.key, AES.MODE_CBC, self.__iv().encode('utf8'))
-        dec = cipher.decrypt(enc)
-        return unpad(dec).decode('utf-8')
-    
-    def __iv(self):
-        return chr(0) * 16
-
 class WindowClass2(QMainWindow, form_class2) :
     def __init__(self) :
         super().__init__()
         self.setupUi(self)
         self.setWindowIcon(QIcon('icon.png'))
         
-        QMessageBox.information(self, 'Information', 'Hello! Thanks for downloading!\nI just wanted to notice a few things before starting.\n\n1. This Editor is GUI version of CLI editor.\n2. You cant use some features yet:\n- Using adb\n- Editor Config\n- Talent orbs\n- Import from JSON file\n\nThats all! Happy editing! ;)',
-                                    QMessageBox.Ok)
         #buttons
         self.loadfile_btn.clicked.connect(self.loadfile)
         self.download_btn.clicked.connect(self.downloadfile)
